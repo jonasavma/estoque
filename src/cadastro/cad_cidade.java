@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import utilitario.Conexao;
 
 public class cad_cidade extends JFrame {
@@ -13,13 +14,15 @@ public class cad_cidade extends JFrame {
     // criação do objeto 
     Conexao con_cidade;
     int navega = 0;
+    int inicia_combo = 0;
+    String ordenacao = "nome";
 
     public cad_cidade() {
         initComponents();
         //inicialização do objeto
         con_cidade = new Conexao();
         con_cidade.conecta();
-        con_cidade.executeSQL("select * from cidade");
+        con_cidade.executeSQL("select * from cidade order by " + ordenacao);
         try {
             while (con_cidade.resultSet.next()) {
                 jcb_pesquisa.addItem(con_cidade.resultSet.getString("nome"));
@@ -32,6 +35,8 @@ public class cad_cidade extends JFrame {
             JOptionPane.showMessageDialog(null, "Não localizou dados");
         }
 
+        preencher_jtable();
+
     }
 
     /**
@@ -43,6 +48,7 @@ public class cad_cidade extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        grupo_ordenacao = new javax.swing.ButtonGroup();
         botao_gravar = new javax.swing.JButton();
         botao_inserir = new javax.swing.JButton();
         botao_excluir = new javax.swing.JButton();
@@ -51,9 +57,6 @@ public class cad_cidade extends JFrame {
         botao_proximo = new javax.swing.JButton();
         botao_ultimo = new javax.swing.JButton();
         botao_primeiro = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        tf_pesquisa = new javax.swing.JTextField();
-        jcb_pesquisa = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         tf_codigo = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -61,7 +64,17 @@ public class cad_cidade extends JFrame {
         jLabel5 = new javax.swing.JLabel();
         cb_uf = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
-        pesquisar = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        tf_pesquisa = new javax.swing.JTextField();
+        jcb_pesquisa = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        rb_codigo = new javax.swing.JRadioButton();
+        rb_nome = new javax.swing.JRadioButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Manutenção do Cadastro de Cidade");
@@ -134,8 +147,6 @@ public class cad_cidade extends JFrame {
             }
         });
 
-        jLabel2.setText("Pesquisa.:");
-
         jLabel3.setText("Código.:");
 
         jLabel4.setText("Nome.:");
@@ -149,10 +160,111 @@ public class cad_cidade extends JFrame {
         jLabel1.setForeground(new java.awt.Color(153, 0, 0));
         jLabel1.setText("Manutenção do Cadastro de Cidade");
 
-        pesquisar.setText("Pesquisar");
-        pesquisar.addActionListener(new java.awt.event.ActionListener() {
+        jPanel1.setBackground(new java.awt.Color(204, 0, 51));
+
+        jLabel2.setText("Pesquisa.:");
+
+        tf_pesquisa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pesquisarActionPerformed(evt);
+                tf_pesquisaActionPerformed(evt);
+            }
+        });
+
+        jcb_pesquisa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcb_pesquisaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tf_pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(jcb_pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(tf_pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcb_pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        jTable1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Codigo", "Nome Cidade", "UF"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+
+        jLabel6.setText("Ordenação");
+
+        grupo_ordenacao.add(rb_codigo);
+        rb_codigo.setText("Código");
+        rb_codigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rb_codigoActionPerformed(evt);
+            }
+        });
+
+        grupo_ordenacao.add(rb_nome);
+        rb_nome.setSelected(true);
+        rb_nome.setText("Nome");
+        rb_nome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rb_nomeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(rb_codigo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rb_nome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 71, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(rb_codigo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(rb_nome))
+        );
+
+        jButton1.setText("Filtrar Na Grade");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -160,84 +272,97 @@ public class cad_cidade extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(106, 106, 106))
             .addGroup(layout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(81, 81, 81)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tf_nome_cidade, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(botao_primeiro)
-                                .addGap(18, 18, 18)
-                                .addComponent(botao_anterior)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(botao_proximo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(botao_ultimo)
-                                .addGap(18, 18, 18)
-                                .addComponent(botao_gravar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(botao_inserir)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(botao_excluir)
-                                .addGap(18, 18, 18)
-                                .addComponent(botao_alterar))
-                            .addComponent(cb_uf, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tf_pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(27, 27, 27)
-                                .addComponent(pesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jcb_pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel5)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel4))
+                            .addGap(14, 14, 14)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(tf_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cb_uf, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(tf_nome_cidade, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(26, 26, 26)
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(botao_primeiro)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(botao_anterior)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jButton1)
+                                    .addGap(24, 24, 24)))
+                            .addComponent(botao_proximo)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(botao_ultimo)
+                            .addGap(18, 18, 18)
+                            .addComponent(botao_gravar)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(botao_inserir)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(botao_excluir)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(botao_alterar))))
+                .addGap(262, 262, 262))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(tf_pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jcb_pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pesquisar))
-                .addGap(18, 18, 18)
+                .addGap(13, 13, 13)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(tf_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(tf_nome_cidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(tf_nome_cidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cb_uf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(botao_alterar)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(botao_gravar)
                         .addComponent(botao_inserir)
                         .addComponent(botao_excluir))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(botao_anterior, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(botao_proximo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(botao_primeiro, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(botao_ultimo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(76, 76, 76))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(botao_anterior, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botao_proximo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botao_primeiro, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botao_ultimo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1))
+                    .addComponent(botao_alterar))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        setBounds(0, 0, 726, 385);
+        setBounds(0, 0, 683, 452);
     }// </editor-fold>//GEN-END:initComponents
 
     private void botao_ultimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botao_ultimoActionPerformed
@@ -291,7 +416,8 @@ public class cad_cidade extends JFrame {
 
             //atualiza o resultSet
             // con_cidade.resultSet = con_cidade.statement.executeQuery("select * from cidade");
-            con_cidade.executeSQL("select * from cidade");
+            con_cidade.executeSQL("select * from cidade order by " + ordenacao);
+            atualiza_combo_box_cidade();
             con_cidade.resultSet.first();
             mostrar_dados();
         } catch (SQLException erro) {
@@ -312,7 +438,7 @@ public class cad_cidade extends JFrame {
     private void botao_excluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botao_excluirActionPerformed
         try {
 
-            String sql = "insert into cidade Where codigo = " + tf_codigo.getText();
+            String sql = "select * from cidade Where codigo = " + tf_codigo.getText();
             // con_cidade.executeSQL(sql);
             con_cidade.resultSet.first();
             String nome = "Deletar a cidade :" + con_cidade.resultSet.getString("nome");
@@ -323,7 +449,8 @@ public class cad_cidade extends JFrame {
                 if (conseguiu_excluir == 1) {
                     JOptionPane.showMessageDialog(null, "Exclusão realizada com sucesso");
                     //atualizar o REsulset
-                    con_cidade.executeSQL("Select * from cidade ");
+                    con_cidade.executeSQL("Select * from cidade order by " + ordenacao);
+                    atualiza_combo_box_cidade();
                     con_cidade.resultSet.first();
                     mostrar_dados();
                 }
@@ -346,7 +473,8 @@ public class cad_cidade extends JFrame {
             JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso!");
 
             //atualiza o ResultSet
-            con_cidade.executeSQL("select * from cidade");
+            con_cidade.executeSQL("select * from cidade order by " + ordenacao);
+            atualiza_combo_box_cidade();
             con_cidade.resultSet.next();
             mostrar_dados();
 
@@ -356,7 +484,29 @@ public class cad_cidade extends JFrame {
         }
     }//GEN-LAST:event_botao_alterarActionPerformed
 
-    private void pesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesquisarActionPerformed
+    private void jcb_pesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcb_pesquisaActionPerformed
+        if (inicia_combo == 1) {
+
+            try {
+                con_cidade.resultSet.first();
+                String igual = "n";
+                while (igual == "n") {
+                    if (con_cidade.resultSet.getString("nome").equals(jcb_pesquisa.getSelectedItem())) {
+                        igual = "s";
+                    } else {
+                        con_cidade.resultSet.next();
+                    }
+                }
+                tf_codigo.setText(con_cidade.resultSet.getString("codigo"));
+                mostrar_dados();
+            } catch (Exception erro) {
+                JOptionPane.showMessageDialog(null, "Não conseguiu localizar via digitação.");
+            }
+        }
+        inicia_combo = 1;
+    }//GEN-LAST:event_jcb_pesquisaActionPerformed
+
+    private void tf_pesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_pesquisaActionPerformed
         try {
             con_cidade.resultSet.first();
             String igual = "n";
@@ -371,10 +521,25 @@ public class cad_cidade extends JFrame {
             }
             tf_codigo.setText(con_cidade.resultSet.getString("codigo"));
             mostrar_dados();
+            jcb_pesquisa.setSelectedItem(tf_nome_cidade.getText());
+
         } catch (Exception erro) {
             JOptionPane.showMessageDialog(null, "Não conseguiu localizar via digitação.");
         }
-    }//GEN-LAST:event_pesquisarActionPerformed
+    }//GEN-LAST:event_tf_pesquisaActionPerformed
+
+    private void rb_codigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rb_codigoActionPerformed
+        ordem_visualizacao("codigo");
+    }//GEN-LAST:event_rb_codigoActionPerformed
+
+    private void rb_nomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rb_nomeActionPerformed
+        ordem_visualizacao("nome");
+    }//GEN-LAST:event_rb_nomeActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+      con_cidade.executeSQL("select * from cidade Where nome like '"+tf_pesquisa.getText()+"%' order by "+ordenacao);
+      preencher_jtable();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -421,13 +586,21 @@ public class cad_cidade extends JFrame {
     private javax.swing.JButton botao_proximo;
     private javax.swing.JButton botao_ultimo;
     private javax.swing.JComboBox<String> cb_uf;
+    private javax.swing.ButtonGroup grupo_ordenacao;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JComboBox<String> jcb_pesquisa;
-    private javax.swing.JButton pesquisar;
+    private javax.swing.JRadioButton rb_codigo;
+    private javax.swing.JRadioButton rb_nome;
     private javax.swing.JTextField tf_codigo;
     private javax.swing.JTextField tf_nome_cidade;
     private javax.swing.JTextField tf_pesquisa;
@@ -455,6 +628,58 @@ public class cad_cidade extends JFrame {
                 navega = 0;
             }
         }
+    }
+
+    public void atualiza_combo_box_cidade() {
+        try {
+
+            jcb_pesquisa.removeAllItems();
+            con_cidade.executeSQL("select * from cidade order by " + ordenacao);
+            while (con_cidade.resultSet.next()) {
+                jcb_pesquisa.addItem(con_cidade.resultSet.getString("nome"));
+
+            }
+            con_cidade.resultSet.first();
+            mostrar_dados();
+
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "Não localizou dados");
+        }
+
+    }
+
+    public void preencher_jtable() {
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(20);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(20);
+
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setNumRows(0);
+
+        try {
+            while (con_cidade.resultSet.next()) {
+                modelo.addRow(new Object[]{con_cidade.resultSet.getString("codigo"), con_cidade.resultSet.getString("nome"), con_cidade.resultSet.getString("uf")});
+                //con_cidade.resultSet.first();
+
+            }
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar cidade!" + erro);
+        }
+    }
+
+    public void ordem_visualizacao( String ordem ) {
+        ordenacao = ordem;
+        con_cidade.executeSQL("select * from cidade order by " + ordenacao);
+        preencher_jtable();
+        atualiza_combo_box_cidade();
+        try {
+            con_cidade.resultSet.first();
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "Erro na ordenação dos " + erro);
+        }
+
+        mostrar_dados();
+
     }
 
 }
